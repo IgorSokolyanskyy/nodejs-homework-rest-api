@@ -5,7 +5,7 @@ const express = require("express");
 const router = express.Router();
 
 router.get("/", async (req, res, next) => {
-  res.json({ message: "home work 02" });
+  res.json({ message: "Home work 02" });
 });
 
 router.get("/:contactId", async (req, res, next) => {
