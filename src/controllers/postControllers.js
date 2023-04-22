@@ -1,8 +1,7 @@
 /** @format */
 
-const { ctrlWrapper } = require("../helpers");
-const { httpError } = require("../helpers");
 const { Contact } = require("../models/contact");
+const { ctrlWrapper, httpError } = require("../helpers");
 
 const getAll = async (req, res) => {
   const contacts = await Contact.find({}, "-createdAt -updatedAt");
