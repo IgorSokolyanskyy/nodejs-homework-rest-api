@@ -4,23 +4,22 @@ const { Contact } = require("../models/contact");
 const { ctrlWrapper, httpError } = require("../helpers");
 
 const getAll = async (req, res) => {
-  const { id: owner } = req.user;
+  const { _id: owner } = req.user;
   const { page = 1, limit = 20, favorite } = req.query;
   const skip = (page - 1) * limit;
-  const contacts = await Contact.find({ owner }, "-createdAt -updatedAt", {
-    skip,
-    limit: Number(limit),
-  })
-    .then((data) => {
-      if (favorite === "false" || favorite === "true") {
-        return data.filter((item) => {
-          return item.favorite.toString() === favorite;
-        });
-      }
-      return data;
-    })
-    .populate("owner", "name email");
-  res.json(contacts);
+  if (favorite) {
+    const result = await Contact.find({ owner, favorite }, "", {
+      skip,
+      limit: Number(limit),
+    }).populate("owner", "_id name email");
+    res.json(result);
+  } else {
+    const result = await Contact.find({ owner }, "", {
+      skip,
+      limit: Number(limit),
+    }).populate("owner", "_id name email");
+    res.json(result);
+  }
 };
 
 const getById = async (req, res) => {
@@ -33,9 +32,11 @@ const getById = async (req, res) => {
 };
 
 const add = async (req, res) => {
+  const { name, email, phone } = req.body;
   const { id: owner } = req.user;
-  const result = await Contact.create({ ...req.body, owner });
-  res.status(201).json(result);
+  const newContact = await Contact.create({ name, email, phone, owner });
+
+  res.status(201).json(newContact);
 };
 
 const updateById = async (req, res) => {
