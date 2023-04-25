@@ -1,6 +1,6 @@
 /** @format */
 
-const messages = {
+const errorMessageList = {
   400: "Bad Request",
   401: "Unauthorized",
   403: "Forbidden",
@@ -8,7 +8,7 @@ const messages = {
   409: "Conflict",
 };
 
-const httpError = (status, message = messages[status]) => {
+const httpError = (status, message = errorMessageList[status]) => {
   const error = new Error(message);
   error.status = status;
 

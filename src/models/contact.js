@@ -2,6 +2,7 @@
 
 const { Schema, model } = require("mongoose");
 const Joi = require("joi");
+Joi.objectId = require("joi-objectid")(Joi);
 const handleMongooseErorr = require("../helpers/handleMongooseErorr");
 
 const isPhoneRegex = /^[+]?[(]?[0-9]{3}[)]?[-\s.]?[0-9]{3}[-\s.]?[0-9]{4,6}$/;
@@ -24,6 +25,10 @@ const contactSchema = new Schema(
     favorite: {
       type: Boolean,
       default: false,
+    },
+    owner: {
+      type: Schema.Types.ObjectId,
+      ref: "user",
     },
   },
   { versionKey: false, timestamps: true }
@@ -60,10 +65,15 @@ const updateFavoriteSchema = Joi.object({
   favorite: Joi.boolean().required(),
 });
 
+const verifyMongoIdSchema = Joi.object({
+  id: Joi.objectId().required(),
+});
+
 const schemas = {
   addSchema,
   updateSchema,
   updateFavoriteSchema,
+  verifyMongoIdSchema,
 };
 
 const Contact = model("contact", contactSchema);
