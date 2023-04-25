@@ -24,7 +24,8 @@ const getAll = async (req, res) => {
 
 const getById = async (req, res) => {
   const { contactId } = req.params;
-  const result = await Contact.findById(contactId);
+  const { _id: owner } = req.user;
+  const result = await Contact.findById({ contactId, owner });
   if (!result) {
     throw httpError(404, `Contact with id:${contactId} not found`);
   }
@@ -41,7 +42,8 @@ const add = async (req, res) => {
 
 const updateById = async (req, res) => {
   const { contactId } = req.params;
-  const result = await Contact.findByIdAndUpdate(contactId, req.body, {
+  const { _id: owner } = req.user;
+  const result = await Contact.findByIdAndUpdate(contactId, req.body, owner, {
     new: true,
   });
   if (!result) {
@@ -52,7 +54,8 @@ const updateById = async (req, res) => {
 
 const updateFavorit = async (req, res) => {
   const { contactId } = req.params;
-  const result = await Contact.findByIdAndUpdate(contactId, req.body, {
+  const { _id: owner } = req.user;
+  const result = await Contact.findByIdAndUpdate(contactId, req.body, owner, {
     new: true,
   });
   if (!result) {
@@ -63,7 +66,8 @@ const updateFavorit = async (req, res) => {
 
 const removeById = async (req, res) => {
   const { contactId } = req.params;
-  const result = await Contact.findByIdAndRemove(contactId);
+  const { _id: owner } = req.user;
+  const result = await Contact.findByIdAndRemove({ contactId, owner });
   if (!result) {
     throw httpError(`Contact with id=${contactId} not found`);
   }

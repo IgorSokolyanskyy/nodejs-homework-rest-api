@@ -7,10 +7,20 @@ const { validateBody, authenticate } = require("../../middlewares");
 const router = express.Router();
 
 // singup
-router.post("/register", validateBody(schemas.registerSchema), ctrl.register);
+router.post(
+  "/register",
+  authenticate,
+  validateBody(schemas.registerSchema),
+  ctrl.register
+);
 
 // singin
-router.post("/login", validateBody(schemas.loginSchema), ctrl.login);
+router.post(
+  "/login",
+  authenticate,
+  validateBody(schemas.loginSchema),
+  ctrl.login
+);
 
 router.get("/current", authenticate, ctrl.getCurrent);
 
