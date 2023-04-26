@@ -67,9 +67,13 @@ const add = async (req, res) => {
 const updateById = async (req, res) => {
   const { contactId } = req.params;
   const { _id: owner } = req.user;
-  const result = await Contact.findOne({ _id: contactId, owner }, req.body, {
-    new: true,
-  });
+  const result = await Contact.findOneAndUpdate(
+    { _id: contactId, owner },
+    req.body,
+    {
+      new: true,
+    }
+  );
   if (!result) {
     throw httpError(404, `Contact with id:${contactId || owner} not found`);
   }
