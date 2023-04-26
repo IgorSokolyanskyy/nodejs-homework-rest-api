@@ -27,6 +27,7 @@ router.put(
 
 router.patch(
   "/:contactId/favorite",
+  authenticate,
   isValidId,
   validateBody(schemas.updateFavoriteSchema),
   validationParams(schemas.verifyMongoIdSchema),
