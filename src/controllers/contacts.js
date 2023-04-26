@@ -67,7 +67,7 @@ const add = async (req, res) => {
 const updateById = async (req, res) => {
   const { contactId } = req.params;
   const { _id: owner } = req.user;
-  const result = await Contact.findByIdAndUpdate(contactId, req.body, owner, {
+  const result = await Contact.findOne(contactId, req.body, owner, {
     new: true,
   });
   if (!result) {
