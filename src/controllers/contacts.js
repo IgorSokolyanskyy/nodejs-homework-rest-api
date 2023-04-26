@@ -27,7 +27,7 @@ const getById = async (req, res) => {
   const { _id: owner } = req.user;
   const result = await Contact.findOne({ contactId, owner });
   if (!result) {
-    throw httpError(404, `Contact with id:${contactId} not found`);
+    throw httpError(404, `Contact with id:${contactId || owner} not found`);
   }
   res.json(result);
 };
@@ -47,7 +47,7 @@ const updateById = async (req, res) => {
     new: true,
   });
   if (!result) {
-    throw httpError(404, `Contact with id:${contactId} not found`);
+    throw httpError(404, `Contact with id:${contactId || owner} not found`);
   }
   res.json(result);
 };
@@ -59,7 +59,7 @@ const updateFavorit = async (req, res) => {
     new: true,
   });
   if (!result) {
-    throw httpError(404, `Contact with id:${contactId} not found`);
+    throw httpError(404, `Contact with id:${contactId || owner} not found`);
   }
   res.json(result);
 };
@@ -69,7 +69,7 @@ const removeById = async (req, res) => {
   const { _id: owner } = req.user;
   const result = await Contact.findOneAndRemove({ contactId, owner });
   if (!result) {
-    throw httpError(`Contact with id=${contactId} not found`);
+    throw httpError(`Contact with id=${contactId || owner} not found`);
   }
   res.json({
     message: "contact deleted",
