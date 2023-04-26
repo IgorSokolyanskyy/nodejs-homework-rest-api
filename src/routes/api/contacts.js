@@ -3,12 +3,7 @@
 const express = require("express");
 const router = express.Router();
 const ctrl = require("../../controllers/contacts");
-const {
-  validateBody,
-  isValidId,
-  authenticate,
-  validationParams,
-} = require("../../middlewares");
+const { validateBody, isValidId, authenticate } = require("../../middlewares");
 const { schemas } = require("../../models/contact");
 
 router.get("/", authenticate, ctrl.getAll);
@@ -30,7 +25,6 @@ router.patch(
   authenticate,
   isValidId,
   validateBody(schemas.updateFavoriteSchema),
-  validationParams(schemas.verifyMongoIdSchema),
   ctrl.updateFavorit
 );
 

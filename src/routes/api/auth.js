@@ -3,7 +3,11 @@
 const express = require("express");
 const ctrl = require("../../controllers/auth");
 const { schemas } = require("../../models/user");
-const { validateBody, authenticate } = require("../../middlewares");
+const {
+  validateBody,
+  authenticate,
+  validationParams,
+} = require("../../middlewares");
 const router = express.Router();
 
 // singup
@@ -20,6 +24,7 @@ router.patch(
   "/",
   authenticate,
   validateBody(schemas.subscriptionSchema),
+  validationParams(schemas.verifyMongoIdSchema),
   ctrl.updateSubscription
 );
 
