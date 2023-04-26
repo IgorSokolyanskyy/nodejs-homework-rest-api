@@ -38,7 +38,7 @@ const getAll = async (req, res) => {
     searchCriteria.email = { $regex: email, $options: "i" };
   }
 
-  const result = await Contact.find(searchCriteria, "", {
+  const result = await Contact.find(searchCriteria, "-createdAt -updatedAt", {
     skip,
     limit: Number(limit),
   }).populate("owner", "_id name email");
