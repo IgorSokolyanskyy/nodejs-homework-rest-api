@@ -8,6 +8,7 @@ const jwt = require("jsonwebtoken");
 const { SECRET_KEY } = process.env;
 const path = require("path");
 const fs = require("fs/promises");
+const jimp = require("jimp");
 
 const avatarsDir = path.join(__dirname, "../", "public", "avatars");
 
@@ -103,6 +104,8 @@ const updateSubscription = async (req, res) => {
 const updateAvatar = async (req, res) => {
   const { _id } = req.user;
   const { path: tempUpload, originalname } = req.file;
+  const img = await jimp.read(tempUpload);
+  await img.resize(250, 250).writeAsync(tempUpload);
   const filename = `${_id}_${originalname}`;
   const resultUpload = path.join(avatarsDir, filename);
   await fs.rename(tempUpload, resultUpload);
