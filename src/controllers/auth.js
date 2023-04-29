@@ -3,9 +3,13 @@
 const { User } = require("../models/user");
 const { ctrlWrapper, httpError } = require("../helpers");
 const bcrypt = require("bcryptjs");
-
+const gravatar = require("gravatar");
 const jwt = require("jsonwebtoken");
 const { SECRET_KEY } = process.env;
+const path = require("path");
+const fs = require("fs/promises");
+
+const avatarsDir = path.join(__dirname, "../", "public", "avatars");
 
 const register = async (req, res) => {
   const { name, email, password, subscription } = req.body;
@@ -16,8 +20,15 @@ const register = async (req, res) => {
   }
 
   const hashPassword = await bcrypt.hash(password, 10);
+  const avatarURL = gravatar.url(email);
 
-  await User.create({ name, email, password: hashPassword, subscription });
+  await User.create({
+    name,
+    email,
+    password: hashPassword,
+    subscription,
+    avatarURL,
+  });
   res.status(201).json({
     user: { name, email, subscription },
   });
@@ -89,10 +100,23 @@ const updateSubscription = async (req, res) => {
   res.status(200).json(result);
 };
 
+const updateAvatar = async (req, res) => {
+  const { _id } = req.user;
+  const { path: tempUpload, originalname } = req.file;
+  const filename = `${_id}_${originalname}`;
+  const resultUpload = path.join(avatarsDir, filename);
+  await fs.rename(tempUpload, resultUpload);
+  const avatarURL = path.join("avatars", filename);
+  await User.findByIdAndUpdate(_id, { avatarURL });
+
+  res.json({ avatarURL });
+};
+
 module.exports = {
   register: ctrlWrapper(register),
   login: ctrlWrapper(login),
   getCurrent: ctrlWrapper(getCurrent),
   logout: ctrlWrapper(logout),
   updateSubscription: ctrlWrapper(updateSubscription),
+  updateAvatar: ctrlWrapper(updateAvatar),
 };
